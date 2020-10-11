@@ -1,0 +1,19 @@
+package com.webdevelope.summoned.task.service;
+
+import com.webdevelope.summoned.task.model.UserIdInfo;
+import com.webdevelope.summoned.task.vo.ResponseVo;
+
+/**
+ * @author LingChen
+ * Created on 2020-10-14
+ */
+public interface UserInfoService {
+    /*
+    注册
+     */
+    ResponseVo<String> register(UserIdInfo user);
+    /*
+    登录
+     */
+    ResponseVo<UserIdInfo> login(String username, String password);
+}
