@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.webdevelope.summoned.task.mappers.SummonedInfoMapper">
+  <resultMap id="BaseResultMap" type="com.webdevelope.summoned.task.model.SummonedInfo">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="own_user_id" jdbcType="BIGINT" property="ownUserId" />
+    <result column="summoned_type" jdbcType="INTEGER" property="summonedType" />
+    <result column="summoned_name" jdbcType="VARCHAR" property="summonedName" />
+    <result column="summoned_desc" jdbcType="VARCHAR" property="summonedDesc" />
+    <result column="wanted_number" jdbcType="INTEGER" property="wantedNumber" />
+    <result column="finish_time" jdbcType="BIGINT" property="finishTime" />
+    <result column="desc_picture" jdbcType="VARCHAR" property="descPicture" />
+    <result column="create_time" jdbcType="BIGINT" property="createTime" />
+    <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, own_user_id, summoned_type, summoned_name, summoned_desc, wanted_number, finish_time, 
+    desc_picture, create_time, update_time, status
+  </sql>
+  <select id="selectByExample" parameterType="com.webdevelope.summoned.task.model.SummonedInfoExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from summoned_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from summoned_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from summoned_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.webdevelope.summoned.task.model.SummonedInfoExample">
+    delete from summoned_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.webdevelope.summoned.task.model.SummonedInfo">
+    insert into summoned_info (id, own_user_id, summoned_type, 
+      summoned_name, summoned_desc, wanted_number, 
+      finish_time, desc_picture, create_time, 
+      update_time, status)
+    values (#{id,jdbcType=BIGINT}, #{ownUserId,jdbcType=BIGINT}, #{summonedType,jdbcType=INTEGER}, 
+      #{summonedName,jdbcType=VARCHAR}, #{summonedDesc,jdbcType=VARCHAR}, #{wantedNumber,jdbcType=INTEGER}, 
+      #{finishTime,jdbcType=BIGINT}, #{descPicture,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}, 
+      #{updateTime,jdbcType=BIGINT}, #{status,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.webdevelope.summoned.task.model.SummonedInfo">
+    insert into summoned_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="ownUserId != null">
+        own_user_id,
+      </if>
+      <if test="summonedType != null">
+        summoned_type,
+      </if>
+      <if test="summonedName != null">
+        summoned_name,
+      </if>
+      <if test="summonedDesc != null">
+        summoned_desc,
+      </if>
+      <if test="wantedNumber != null">
+        wanted_number,
+      </if>
+      <if test="finishTime != null">
+        finish_time,
+      </if>
+      <if test="descPicture != null">
+        desc_picture,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="ownUserId != null">
+        #{ownUserId,jdbcType=BIGINT},
+      </if>
+      <if test="summonedType != null">
+        #{summonedType,jdbcType=INTEGER},
+      </if>
+      <if test="summonedName != null">
+        #{summonedName,jdbcType=VARCHAR},
+      </if>
+      <if test="summonedDesc != null">
+        #{summonedDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="wantedNumber != null">
+        #{wantedNumber,jdbcType=INTEGER},
+      </if>
+      <if test="finishTime != null">
+        #{finishTime,jdbcType=BIGINT},
+      </if>
+      <if test="descPicture != null">
+        #{descPicture,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.webdevelope.summoned.task.model.SummonedInfoExample" resultType="java.lang.Long">
+    select count(*) from summoned_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update summoned_info
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.ownUserId != null">
+        own_user_id = #{record.ownUserId,jdbcType=BIGINT},
+      </if>
+      <if test="record.summonedType != null">
+        summoned_type = #{record.summonedType,jdbcType=INTEGER},
+      </if>
+      <if test="record.summonedName != null">
+        summoned_name = #{record.summonedName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.summonedDesc != null">
+        summoned_desc = #{record.summonedDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wantedNumber != null">
+        wanted_number = #{record.wantedNumber,jdbcType=INTEGER},
+      </if>
+      <if test="record.finishTime != null">
+        finish_time = #{record.finishTime,jdbcType=BIGINT},
+      </if>
+      <if test="record.descPicture != null">
+        desc_picture = #{record.descPicture,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=BIGINT},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update summoned_info
+    set id = #{record.id,jdbcType=BIGINT},
+      own_user_id = #{record.ownUserId,jdbcType=BIGINT},
+      summoned_type = #{record.summonedType,jdbcType=INTEGER},
+      summoned_name = #{record.summonedName,jdbcType=VARCHAR},
+      summoned_desc = #{record.summonedDesc,jdbcType=VARCHAR},
+      wanted_number = #{record.wantedNumber,jdbcType=INTEGER},
+      finish_time = #{record.finishTime,jdbcType=BIGINT},
+      desc_picture = #{record.descPicture,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=BIGINT},
+      status = #{record.status,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.webdevelope.summoned.task.model.SummonedInfo">
+    update summoned_info
+    <set>
+      <if test="ownUserId != null">
+        own_user_id = #{ownUserId,jdbcType=BIGINT},
+      </if>
+      <if test="summonedType != null">
+        summoned_type = #{summonedType,jdbcType=INTEGER},
+      </if>
+      <if test="summonedName != null">
+        summoned_name = #{summonedName,jdbcType=VARCHAR},
+      </if>
+      <if test="summonedDesc != null">
+        summoned_desc = #{summonedDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="wantedNumber != null">
+        wanted_number = #{wantedNumber,jdbcType=INTEGER},
+      </if>
+      <if test="finishTime != null">
+        finish_time = #{finishTime,jdbcType=BIGINT},
+      </if>
+      <if test="descPicture != null">
+        desc_picture = #{descPicture,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.webdevelope.summoned.task.model.SummonedInfo">
+    update summoned_info
+    set own_user_id = #{ownUserId,jdbcType=BIGINT},
+      summoned_type = #{summonedType,jdbcType=INTEGER},
+      summoned_name = #{summonedName,jdbcType=VARCHAR},
+      summoned_desc = #{summonedDesc,jdbcType=VARCHAR},
+      wanted_number = #{wantedNumber,jdbcType=INTEGER},
+      finish_time = #{finishTime,jdbcType=BIGINT},
+      desc_picture = #{descPicture,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=BIGINT},
+      status = #{status,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

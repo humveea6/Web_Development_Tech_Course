@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.webdevelope.summoned.task.mappers.SummonedResponseInfoMapper">
+  <resultMap id="BaseResultMap" type="com.webdevelope.summoned.task.model.SummonedResponseInfo">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="request_id" jdbcType="BIGINT" property="requestId" />
+    <result column="owned_user_id" jdbcType="BIGINT" property="ownedUserId" />
+    <result column="response_user_id" jdbcType="BIGINT" property="responseUserId" />
+    <result column="create_time" jdbcType="BIGINT" property="createTime" />
+    <result column="owner_pay" jdbcType="INTEGER" property="ownerPay" />
+    <result column="response_pay" jdbcType="INTEGER" property="responsePay" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, request_id, owned_user_id, response_user_id, create_time, owner_pay, response_pay
+  </sql>
+  <select id="selectByExample" parameterType="com.webdevelope.summoned.task.model.SummonedResponseInfoExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from summoned_response_detail
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from summoned_response_detail
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from summoned_response_detail
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.webdevelope.summoned.task.model.SummonedResponseInfoExample">
+    delete from summoned_response_detail
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.webdevelope.summoned.task.model.SummonedResponseInfo">
+    insert into summoned_response_detail (id, request_id, owned_user_id, 
+      response_user_id, create_time, owner_pay, 
+      response_pay)
+    values (#{id,jdbcType=BIGINT}, #{requestId,jdbcType=BIGINT}, #{ownedUserId,jdbcType=BIGINT}, 
+      #{responseUserId,jdbcType=BIGINT}, #{createTime,jdbcType=BIGINT}, #{ownerPay,jdbcType=INTEGER}, 
+      #{responsePay,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.webdevelope.summoned.task.model.SummonedResponseInfo">
+    insert into summoned_response_detail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="requestId != null">
+        request_id,
+      </if>
+      <if test="ownedUserId != null">
+        owned_user_id,
+      </if>
+      <if test="responseUserId != null">
+        response_user_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="ownerPay != null">
+        owner_pay,
+      </if>
+      <if test="responsePay != null">
+        response_pay,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="requestId != null">
+        #{requestId,jdbcType=BIGINT},
+      </if>
+      <if test="ownedUserId != null">
+        #{ownedUserId,jdbcType=BIGINT},
+      </if>
+      <if test="responseUserId != null">
+        #{responseUserId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="ownerPay != null">
+        #{ownerPay,jdbcType=INTEGER},
+      </if>
+      <if test="responsePay != null">
+        #{responsePay,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.webdevelope.summoned.task.model.SummonedResponseInfoExample" resultType="java.lang.Long">
+    select count(*) from summoned_response_detail
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update summoned_response_detail
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.requestId != null">
+        request_id = #{record.requestId,jdbcType=BIGINT},
+      </if>
+      <if test="record.ownedUserId != null">
+        owned_user_id = #{record.ownedUserId,jdbcType=BIGINT},
+      </if>
+      <if test="record.responseUserId != null">
+        response_user_id = #{record.responseUserId,jdbcType=BIGINT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=BIGINT},
+      </if>
+      <if test="record.ownerPay != null">
+        owner_pay = #{record.ownerPay,jdbcType=INTEGER},
+      </if>
+      <if test="record.responsePay != null">
+        response_pay = #{record.responsePay,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update summoned_response_detail
+    set id = #{record.id,jdbcType=BIGINT},
+      request_id = #{record.requestId,jdbcType=BIGINT},
+      owned_user_id = #{record.ownedUserId,jdbcType=BIGINT},
+      response_user_id = #{record.responseUserId,jdbcType=BIGINT},
+      create_time = #{record.createTime,jdbcType=BIGINT},
+      owner_pay = #{record.ownerPay,jdbcType=INTEGER},
+      response_pay = #{record.responsePay,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.webdevelope.summoned.task.model.SummonedResponseInfo">
+    update summoned_response_detail
+    <set>
+      <if test="requestId != null">
+        request_id = #{requestId,jdbcType=BIGINT},
+      </if>
+      <if test="ownedUserId != null">
+        owned_user_id = #{ownedUserId,jdbcType=BIGINT},
+      </if>
+      <if test="responseUserId != null">
+        response_user_id = #{responseUserId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="ownerPay != null">
+        owner_pay = #{ownerPay,jdbcType=INTEGER},
+      </if>
+      <if test="responsePay != null">
+        response_pay = #{responsePay,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.webdevelope.summoned.task.model.SummonedResponseInfo">
+    update summoned_response_detail
+    set request_id = #{requestId,jdbcType=BIGINT},
+      owned_user_id = #{ownedUserId,jdbcType=BIGINT},
+      response_user_id = #{responseUserId,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=BIGINT},
+      owner_pay = #{ownerPay,jdbcType=INTEGER},
+      response_pay = #{responsePay,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

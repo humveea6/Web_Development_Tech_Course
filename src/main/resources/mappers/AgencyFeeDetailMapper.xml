@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.webdevelope.summoned.task.mappers.AgencyFeeDetailMapper">
+  <resultMap id="BaseResultMap" type="com.webdevelope.summoned.task.model.AgencyFeeDetail">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="time" jdbcType="BIGINT" property="time" />
+    <result column="location" jdbcType="VARCHAR" property="location" />
+    <result column="summoned_type" jdbcType="INTEGER" property="summonedType" />
+    <result column="numbers" jdbcType="INTEGER" property="numbers" />
+    <result column="agency_fee" jdbcType="INTEGER" property="agencyFee" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, time, location, summoned_type, numbers, agency_fee
+  </sql>
+  <select id="selectByExample" parameterType="com.webdevelope.summoned.task.model.AgencyFeeDetailExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from agency_fee_detail
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from agency_fee_detail
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from agency_fee_detail
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.webdevelope.summoned.task.model.AgencyFeeDetailExample">
+    delete from agency_fee_detail
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.webdevelope.summoned.task.model.AgencyFeeDetail">
+    insert into agency_fee_detail (id, time, location, 
+      summoned_type, numbers, agency_fee
+      )
+    values (#{id,jdbcType=BIGINT}, #{time,jdbcType=BIGINT}, #{location,jdbcType=VARCHAR}, 
+      #{summonedType,jdbcType=INTEGER}, #{numbers,jdbcType=INTEGER}, #{agencyFee,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.webdevelope.summoned.task.model.AgencyFeeDetail">
+    insert into agency_fee_detail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="time != null">
+        time,
+      </if>
+      <if test="location != null">
+        location,
+      </if>
+      <if test="summonedType != null">
+        summoned_type,
+      </if>
+      <if test="numbers != null">
+        numbers,
+      </if>
+      <if test="agencyFee != null">
+        agency_fee,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="time != null">
+        #{time,jdbcType=BIGINT},
+      </if>
+      <if test="location != null">
+        #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="summonedType != null">
+        #{summonedType,jdbcType=INTEGER},
+      </if>
+      <if test="numbers != null">
+        #{numbers,jdbcType=INTEGER},
+      </if>
+      <if test="agencyFee != null">
+        #{agencyFee,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.webdevelope.summoned.task.model.AgencyFeeDetailExample" resultType="java.lang.Long">
+    select count(*) from agency_fee_detail
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update agency_fee_detail
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.time != null">
+        time = #{record.time,jdbcType=BIGINT},
+      </if>
+      <if test="record.location != null">
+        location = #{record.location,jdbcType=VARCHAR},
+      </if>
+      <if test="record.summonedType != null">
+        summoned_type = #{record.summonedType,jdbcType=INTEGER},
+      </if>
+      <if test="record.numbers != null">
+        numbers = #{record.numbers,jdbcType=INTEGER},
+      </if>
+      <if test="record.agencyFee != null">
+        agency_fee = #{record.agencyFee,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update agency_fee_detail
+    set id = #{record.id,jdbcType=BIGINT},
+      time = #{record.time,jdbcType=BIGINT},
+      location = #{record.location,jdbcType=VARCHAR},
+      summoned_type = #{record.summonedType,jdbcType=INTEGER},
+      numbers = #{record.numbers,jdbcType=INTEGER},
+      agency_fee = #{record.agencyFee,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.webdevelope.summoned.task.model.AgencyFeeDetail">
+    update agency_fee_detail
+    <set>
+      <if test="time != null">
+        time = #{time,jdbcType=BIGINT},
+      </if>
+      <if test="location != null">
+        location = #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="summonedType != null">
+        summoned_type = #{summonedType,jdbcType=INTEGER},
+      </if>
+      <if test="numbers != null">
+        numbers = #{numbers,jdbcType=INTEGER},
+      </if>
+      <if test="agencyFee != null">
+        agency_fee = #{agencyFee,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.webdevelope.summoned.task.model.AgencyFeeDetail">
+    update agency_fee_detail
+    set time = #{time,jdbcType=BIGINT},
+      location = #{location,jdbcType=VARCHAR},
+      summoned_type = #{summonedType,jdbcType=INTEGER},
+      numbers = #{numbers,jdbcType=INTEGER},
+      agency_fee = #{agencyFee,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
