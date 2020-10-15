@@ -1,5 +1,6 @@
 package com.webdevelope.summoned.task.controller;
 
+import com.webdevelope.summoned.task.annotations.SeniorPermissionRequired;
 import com.webdevelope.summoned.task.form.UserLoginform;
 import com.webdevelope.summoned.task.form.UserRegisterform;
 import com.webdevelope.summoned.task.model.LoginToken;
@@ -15,10 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,7 +35,7 @@ public class UserController {
     @Autowired
     private UserInfoService userInfoService;
 
-    private static String TOKEN_NAME = "userIsLogin";
+    private static String TOKEN_NAME = "userIsLogIn";
 
     private final Integer EXPIRE_TIME = 60*60*24*7;
 
@@ -88,6 +86,13 @@ public class UserController {
         }
 
         return WebResultUtil.buildResult(ResponseVo.success(),HttpStatus.OK);
+    }
+
+    @SeniorPermissionRequired
+    @GetMapping("/test")
+    public ResponseEntity<String> annotationTest(){
+
+        return WebResultUtil.buildResult(ResponseVo.success("登录成功！"),HttpStatus.OK);
     }
 
     public String buildToken(UserIdInfo userIdInfo) {

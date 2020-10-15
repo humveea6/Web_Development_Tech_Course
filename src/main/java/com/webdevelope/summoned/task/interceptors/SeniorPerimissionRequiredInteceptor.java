@@ -33,11 +33,12 @@ public class SeniorPerimissionRequiredInteceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if(handler.getClass().isAssignableFrom(HandlerMethod.class)){
-            System.out.println("SeniorPerimissionRequiredInteceptor enter log interceptor hnadler 233");
+            logger.info("SeniorPerimissionRequiredInteceptor enter log interceptor hnadler 233");
             SeniorPermissionRequired record = findAnnotation((HandlerMethod) handler, SeniorPermissionRequired.class);
             if(record != null){
-                System.out.println("SeniorPerimissionRequiredInteceptor method has annotation!");
+                logger.info("SeniorPerimissionRequiredInteceptor method has annotation!");
                 String cookie = CookieUtils.getCookie(request, APPROVAL_TOKEN_NAME);
+                logger.info("cookie :"+JsonUtils.toJson(cookie));
                 if (isEmpty(cookie)) {
                     throw new SeniorPermissionRequiredException();
                 }
