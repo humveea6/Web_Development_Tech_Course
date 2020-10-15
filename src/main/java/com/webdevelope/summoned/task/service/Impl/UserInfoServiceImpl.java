@@ -4,7 +4,9 @@ import com.webdevelope.summoned.task.mappers.UserIdInfoMapper;
 import com.webdevelope.summoned.task.model.UserIdInfo;
 import com.webdevelope.summoned.task.model.UserIdInfoExample;
 import com.webdevelope.summoned.task.service.UserInfoService;
+import com.webdevelope.summoned.task.utils.JsonUtils;
 import com.webdevelope.summoned.task.vo.ResponseVo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -17,6 +19,7 @@ import java.util.List;
  * Created on 2020-10-14
  */
 @Service
+@Slf4j
 public class UserInfoServiceImpl implements UserInfoService {
 
     @Autowired
@@ -24,14 +27,17 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public ResponseVo<String> register(UserIdInfo user) {
-
         //username不重复
+        log.info("register enter");
+        log.info("params: "+ JsonUtils.toJson(user));
         UserIdInfoExample userIdInfoExample = new UserIdInfoExample();
         UserIdInfoExample.Criteria criteria = userIdInfoExample.createCriteria();
         criteria.andUserNameEqualTo(user.getUserName());
         if (userIdInfoMapper.countByExample(userIdInfoExample) > 0){
             return ResponseVo.fail("用户名已存在！");
         }
+
+        log.info("register ok here");
 
         //MD5 摘要
         String s = DigestUtils.md5DigestAsHex(user.getPassword().getBytes(StandardCharsets.UTF_8));

@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +30,7 @@ import java.util.Base64;
  * Created on 2020-10-14
  */
 @RestController
+@RequestMapping("/user")
 @Slf4j
 public class UserController {
 
@@ -39,7 +41,7 @@ public class UserController {
 
     private final Integer EXPIRE_TIME = 60*60*24*7;
 
-    @PostMapping("/user/register")
+    @PostMapping("/register")
     public ResponseEntity<String> register(@Valid @RequestBody UserRegisterform userRegisterform,
                                    BindingResult bindingResult){
         if(bindingResult.hasErrors()){
@@ -49,12 +51,13 @@ public class UserController {
         }
         UserIdInfo user = new UserIdInfo();
         BeanUtils.copyProperties(userRegisterform,user);
+        log.info("params: "+ JsonUtils.toJson(user));
         user.setUserGrade(1);
         ResponseVo<String> register = userInfoService.register(user);
         return WebResultUtil.buildResult(ResponseVo.success(register),HttpStatus.OK);
     }
 
-    @PostMapping("/user/login")
+    @PostMapping("/login")
     public ResponseEntity<String> login(@Valid @RequestBody UserLoginform userLoginform,
                                         BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response){
         if(bindingResult.hasErrors()){
