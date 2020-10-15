@@ -29,7 +29,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     public ResponseVo<String> register(UserIdInfo user) {
         //username不重复
         log.info("register enter");
-        log.info("params: "+ JsonUtils.toJson(user));
+        log.info("register params: "+ JsonUtils.toJson(user));
         UserIdInfoExample userIdInfoExample = new UserIdInfoExample();
         UserIdInfoExample.Criteria criteria = userIdInfoExample.createCriteria();
         criteria.andUserNameEqualTo(user.getUserName());
