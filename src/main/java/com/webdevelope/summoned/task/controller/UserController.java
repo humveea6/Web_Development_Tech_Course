@@ -1,6 +1,7 @@
 package com.webdevelope.summoned.task.controller;
 
 import com.webdevelope.summoned.task.annotations.SeniorPermissionRequired;
+import com.webdevelope.summoned.task.form.UserInfoModifyForm;
 import com.webdevelope.summoned.task.form.UserLoginform;
 import com.webdevelope.summoned.task.form.UserRegisterform;
 import com.webdevelope.summoned.task.model.LoginToken;
@@ -86,6 +87,18 @@ public class UserController {
         }
 
         return WebResultUtil.buildResult(ResponseVo.success(),HttpStatus.OK);
+    }
+
+    @SeniorPermissionRequired
+    @PostMapping("/modify")
+    public ResponseEntity<String> modifyInfo(@Valid @RequestBody UserInfoModifyForm userInfoModifyForm){
+        int modify = userInfoService.modify(userInfoModifyForm.getId(), userInfoModifyForm.getPassword(), userInfoModifyForm.getCellphoneNumber());
+        if(modify > 0){
+            return WebResultUtil.buildResult(ResponseVo.success(),HttpStatus.OK);
+        }
+        else{
+            return WebResultUtil.buildResult(ResponseVo.fail(),HttpStatus.OK);
+        }
     }
 
     @SeniorPermissionRequired
