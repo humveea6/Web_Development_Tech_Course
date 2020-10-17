@@ -16,4 +16,13 @@ public interface UserInfoService {
     登录
      */
     ResponseVo<UserIdInfo> login(String username, String password);
+
+    /**
+     * 修改用户信息
+     * @param id
+     * @param password
+     * @param phone
+     * @return
+     */
+    int modify(long id,String password,String phone);
 }

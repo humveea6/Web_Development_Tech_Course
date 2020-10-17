@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+import org.springframework.util.StringUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -73,4 +74,18 @@ public class UserInfoServiceImpl implements UserInfoService {
         return ResponseVo.success(user);
     }
 
+    @Override
+    public int modify(long id, String password, String phone) {
+        UserIdInfo userIdInfo = new UserIdInfo();
+        userIdInfo.setId(id);
+        if(!StringUtils.isEmpty(phone)) {
+            userIdInfo.setCellphoneNumber(phone);
+        }
+        if(!StringUtils.isEmpty(password)){
+            //MD5 摘要
+            String s = DigestUtils.md5DigestAsHex(password.getBytes(StandardCharsets.UTF_8));
+            userIdInfo.setPassword(s);
+        }
+        return userIdInfoMapper.updateByPrimaryKeySelective(userIdInfo);
+    }
 }
