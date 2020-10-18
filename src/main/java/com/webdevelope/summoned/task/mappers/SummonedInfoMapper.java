@@ -3,6 +3,8 @@ package com.webdevelope.summoned.task.mappers;
 import com.webdevelope.summoned.task.model.SummonedInfo;
 import com.webdevelope.summoned.task.model.SummonedInfoExample;
 import java.util.List;
+
+import com.webdevelope.summoned.task.model.SummonedInfoPageExample;
 import org.apache.ibatis.annotations.Param;
 
 public interface SummonedInfoMapper {
@@ -17,6 +19,8 @@ public interface SummonedInfoMapper {
     int insertSelective(SummonedInfo record);
 
     List<SummonedInfo> selectByExample(SummonedInfoExample example);
+
+    List<SummonedInfo> selectByPageExample(SummonedInfoPageExample example);
 
     SummonedInfo selectByPrimaryKey(Long id);
 
