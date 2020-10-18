@@ -8,7 +8,7 @@ public class BaseResultVo<T> {
 
     private int pageNum;
 
-    private int pageSize;
+    private int total;
 
     private T data;
 
@@ -27,12 +27,12 @@ public class BaseResultVo<T> {
         this.pageNum = pageNum;
     }
 
-    public int getPageSize() {
-        return pageSize;
+    public int getTotal() {
+        return total;
     }
 
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
+    public void setTotal(int total) {
+        this.total = total;
     }
 
     public T getData() {

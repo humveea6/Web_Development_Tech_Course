@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.webdevelope.summoned.task.enums.SummonedStatusEnum.DELETE;
@@ -88,9 +87,10 @@ public class SummonedRequestServiceImpl implements SummonedRequestService {
             criteria.andSummonedNameLike("%"+search+"%");
         }
         List<SummonedInfo> summonedInfoList = summonedInfoMapper.selectByPageExample(example);
+        long count = summonedInfoMapper.countByExample(example);
         BaseResultVo resultVo = new BaseResultVo(summonedInfoList);
         resultVo.setPageNum(pageDto.getPageNum());
-        resultVo.setPageSize(pageDto.getPageSize());
+        resultVo.setTotal((int)(count-1)/pageDto.getPageSize()+1);
         return resultVo;
     }
 
