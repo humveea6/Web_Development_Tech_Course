@@ -1,6 +1,7 @@
 package com.webdevelope.summoned.task.controller;
 
 import com.webdevelope.summoned.task.annotations.SeniorPermissionRequired;
+import com.webdevelope.summoned.task.dto.PageDto;
 import com.webdevelope.summoned.task.enums.SummonedTypeEnum;
 import com.webdevelope.summoned.task.form.SummonedRequestForm;
 import com.webdevelope.summoned.task.service.SummonedRequestService;
@@ -31,9 +32,9 @@ public class RequestController {
     private SummonedRequestService summonedRequestService;
 
     @GetMapping("/list")
-    ResponseEntity<String> getSummonedList(Long userId,Integer type,String search){
+    ResponseEntity<String> getSummonedList(Long userId, Integer type, String search, PageDto pageDto){
         return WebResultUtil.buildResult(ResponseVo.success(
-                summonedRequestService.getSummonedList(userId,type,search)),HttpStatus.OK);
+                summonedRequestService.getSummonedList(userId,type,search,pageDto)),HttpStatus.OK);
     }
 
     @GetMapping("/detail")

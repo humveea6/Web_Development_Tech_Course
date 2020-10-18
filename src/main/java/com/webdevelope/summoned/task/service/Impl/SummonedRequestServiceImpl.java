@@ -1,14 +1,13 @@
 package com.webdevelope.summoned.task.service.Impl;
 
+import com.webdevelope.summoned.task.dto.PageDto;
 import com.webdevelope.summoned.task.form.SummonedRequestForm;
 import com.webdevelope.summoned.task.mappers.SummonedInfoMapper;
 import com.webdevelope.summoned.task.mappers.SummonedRequestInfoMapper;
-import com.webdevelope.summoned.task.model.SummonedInfo;
-import com.webdevelope.summoned.task.model.SummonedInfoExample;
-import com.webdevelope.summoned.task.model.SummonedRequestInfo;
-import com.webdevelope.summoned.task.model.SummonedRequestInfoExample;
+import com.webdevelope.summoned.task.model.*;
 import com.webdevelope.summoned.task.service.SummonedRequestService;
 import com.webdevelope.summoned.task.utils.JsonUtils;
+import com.webdevelope.summoned.task.vo.BaseResultVo;
 import com.webdevelope.summoned.task.vo.SummonedDetailVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -74,9 +73,11 @@ public class SummonedRequestServiceImpl implements SummonedRequestService {
     }
 
     @Override
-    public List<SummonedInfo> getSummonedList(Long userId, Integer type, String search) {
-        SummonedInfoExample summonedInfoExample = new SummonedInfoExample();
-        SummonedInfoExample.Criteria criteria = summonedInfoExample.createCriteria();
+    public BaseResultVo getSummonedList(Long userId, Integer type, String search, PageDto pageDto) {
+        SummonedInfoPageExample example = new SummonedInfoPageExample();
+        example.setPageNum(Math.max(pageDto.getPageNum()-1,0));
+        example.setPageSize(pageDto.getPageSize());
+        SummonedInfoExample.Criteria criteria = example.createCriteria();
         if(userId != null){
             criteria.andOwnUserIdEqualTo(userId);
         }
@@ -86,7 +87,11 @@ public class SummonedRequestServiceImpl implements SummonedRequestService {
         if(!StringUtils.isEmpty(search)){
             criteria.andSummonedNameLike("%"+search+"%");
         }
-        return summonedInfoMapper.selectByExample(summonedInfoExample);
+        List<SummonedInfo> summonedInfoList = summonedInfoMapper.selectByPageExample(example);
+        BaseResultVo resultVo = new BaseResultVo(summonedInfoList);
+        resultVo.setPageNum(pageDto.getPageNum());
+        resultVo.setPageSize(pageDto.getPageSize());
+        return resultVo;
     }
 
     @Override
