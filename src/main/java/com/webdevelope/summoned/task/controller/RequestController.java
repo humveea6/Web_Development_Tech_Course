@@ -30,6 +30,18 @@ public class RequestController {
     @Autowired
     private SummonedRequestService summonedRequestService;
 
+    @GetMapping("/list")
+    ResponseEntity<String> getSummonedList(Long userId,Integer type,String search){
+        return WebResultUtil.buildResult(ResponseVo.success(
+                summonedRequestService.getSummonedList(userId,type,search)),HttpStatus.OK);
+    }
+
+    @GetMapping("/detail")
+    ResponseEntity<String> getDetail(Long userId,Long summonedId){
+        return WebResultUtil.buildResult(ResponseVo.success(
+                summonedRequestService.getSummonedDetail(userId,summonedId)),HttpStatus.OK);
+    }
+
     @PostMapping("/add")
     @SeniorPermissionRequired
     ResponseEntity<String> addOrUpdateSummoned(@RequestBody SummonedRequestForm form){
@@ -58,12 +70,6 @@ public class RequestController {
             log.error("addSummoned file upload fail, "+e);
             return WebResultUtil.buildResult(ResponseVo.fail(), HttpStatus.OK);
         }
-    }
-
-    @GetMapping("/list")
-    ResponseEntity<String> getSummonedList(Long userId,Integer type,String search){
-        return WebResultUtil.buildResult(ResponseVo.success(
-                summonedRequestService.getSummonedList(userId,type,search)),HttpStatus.OK);
     }
 
     @GetMapping("/type")

@@ -2,16 +2,21 @@ package com.webdevelope.summoned.task.service.Impl;
 
 import com.webdevelope.summoned.task.form.SummonedRequestForm;
 import com.webdevelope.summoned.task.mappers.SummonedInfoMapper;
+import com.webdevelope.summoned.task.mappers.SummonedRequestInfoMapper;
 import com.webdevelope.summoned.task.model.SummonedInfo;
 import com.webdevelope.summoned.task.model.SummonedInfoExample;
+import com.webdevelope.summoned.task.model.SummonedRequestInfo;
+import com.webdevelope.summoned.task.model.SummonedRequestInfoExample;
 import com.webdevelope.summoned.task.service.SummonedRequestService;
 import com.webdevelope.summoned.task.utils.JsonUtils;
+import com.webdevelope.summoned.task.vo.SummonedDetailVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.webdevelope.summoned.task.enums.SummonedStatusEnum.DELETE;
@@ -27,6 +32,9 @@ public class SummonedRequestServiceImpl implements SummonedRequestService {
 
     @Autowired
     private SummonedInfoMapper summonedInfoMapper;
+
+    @Autowired
+    private SummonedRequestInfoMapper summonedRequestInfoMapper;
 
     @Override
     public int addOrUpdateRequest(SummonedRequestForm form) {
@@ -79,5 +87,23 @@ public class SummonedRequestServiceImpl implements SummonedRequestService {
             criteria.andSummonedNameLike("%"+search+"%");
         }
         return summonedInfoMapper.selectByExample(summonedInfoExample);
+    }
+
+    @Override
+    public SummonedDetailVo getSummonedDetail(Long userId, Long summonedId) {
+        SummonedDetailVo summonedDetailVo = new SummonedDetailVo();
+        if(summonedId == null){
+            return summonedDetailVo;
+        }
+        SummonedInfo summonedInfo = summonedInfoMapper.selectByPrimaryKey(summonedId);
+        summonedDetailVo.setSummonedInfo(summonedInfo);
+        if(userId != null && userId.equals(summonedInfo.getOwnUserId())){
+            SummonedRequestInfoExample example = new SummonedRequestInfoExample();
+            SummonedRequestInfoExample.Criteria criteria = example.createCriteria();
+            criteria.andSummonedIdEqualTo(summonedId);
+            List<SummonedRequestInfo> summonedRequestInfoList = summonedRequestInfoMapper.selectByExample(example);
+            summonedDetailVo.setRequestInfoList(summonedRequestInfoList);
+        }
+        return summonedDetailVo;
     }
 }
