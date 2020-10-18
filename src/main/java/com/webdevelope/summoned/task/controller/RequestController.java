@@ -1,5 +1,6 @@
 package com.webdevelope.summoned.task.controller;
 
+import com.webdevelope.summoned.task.annotations.SeniorPermissionRequired;
 import com.webdevelope.summoned.task.enums.SummonedTypeEnum;
 import com.webdevelope.summoned.task.form.SummonedRequestForm;
 import com.webdevelope.summoned.task.service.SummonedRequestService;
@@ -30,6 +31,7 @@ public class RequestController {
     private SummonedRequestService summonedRequestService;
 
     @PostMapping("/add")
+    @SeniorPermissionRequired
     ResponseEntity<String> addOrUpdateSummoned(@RequestBody SummonedRequestForm form){
 
         int i = summonedRequestService.addOrUpdateRequest(form);
@@ -40,6 +42,7 @@ public class RequestController {
     }
 
     @PostMapping("/file")
+    @SeniorPermissionRequired
     ResponseEntity<String> uploadSummonedFile(MultipartFile file){
         if(file.isEmpty()){
             return WebResultUtil.buildResult(ResponseVo.PARAM_ERROR("文件为空！"),HttpStatus.OK);
@@ -55,6 +58,12 @@ public class RequestController {
             log.error("addSummoned file upload fail, "+e);
             return WebResultUtil.buildResult(ResponseVo.fail(), HttpStatus.OK);
         }
+    }
+
+    @GetMapping("/list")
+    ResponseEntity<String> getSummonedList(Long userId,Integer type,String search){
+        return WebResultUtil.buildResult(ResponseVo.success(
+                summonedRequestService.getSummonedList(userId,type,search)),HttpStatus.OK);
     }
 
     @GetMapping("/type")

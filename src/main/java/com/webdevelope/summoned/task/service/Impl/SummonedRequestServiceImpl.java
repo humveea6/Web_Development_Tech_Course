@@ -3,6 +3,7 @@ package com.webdevelope.summoned.task.service.Impl;
 import com.webdevelope.summoned.task.form.SummonedRequestForm;
 import com.webdevelope.summoned.task.mappers.SummonedInfoMapper;
 import com.webdevelope.summoned.task.model.SummonedInfo;
+import com.webdevelope.summoned.task.model.SummonedInfoExample;
 import com.webdevelope.summoned.task.service.SummonedRequestService;
 import com.webdevelope.summoned.task.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +11,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import java.util.List;
 
 import static com.webdevelope.summoned.task.enums.SummonedStatusEnum.DELETE;
 import static com.webdevelope.summoned.task.enums.SummonedStatusEnum.WAIT_FOR_RESPONSE;
@@ -60,5 +63,21 @@ public class SummonedRequestServiceImpl implements SummonedRequestService {
                 return -1;
             }
         }
+    }
+
+    @Override
+    public List<SummonedInfo> getSummonedList(Long userId, Integer type, String search) {
+        SummonedInfoExample summonedInfoExample = new SummonedInfoExample();
+        SummonedInfoExample.Criteria criteria = summonedInfoExample.createCriteria();
+        if(userId != null){
+            criteria.andOwnUserIdEqualTo(userId);
+        }
+        if(type != null){
+            criteria.andSummonedTypeEqualTo(type);
+        }
+        if(!StringUtils.isEmpty(search)){
+            criteria.andSummonedNameLike("%"+search+"%");
+        }
+        return summonedInfoMapper.selectByExample(summonedInfoExample);
     }
 }

@@ -16,12 +16,22 @@ public class SummonedRequestForm {
 
     private String summonedDesc;
 
+    private String descPicture;
+
     private Integer wantedNumber;
 
     private Long finishTime;
 
     //1修改 2删除
     private Integer option;
+
+    public String getDescPicture() {
+        return descPicture;
+    }
+
+    public void setDescPicture(String descPicture) {
+        this.descPicture = descPicture;
+    }
 
     public Integer getOption() {
         return option;
