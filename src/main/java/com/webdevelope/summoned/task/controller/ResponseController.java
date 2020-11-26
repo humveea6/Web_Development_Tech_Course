@@ -37,7 +37,7 @@ public class ResponseController {
     }
 
     @SeniorPermissionRequired
-    @PostMapping("/addOrUpdate")
+    @PostMapping("/manage")
     public ResponseEntity<String> manageSummoned(SummonedManageDto summonedManageDto){
         int i = summonedResponseService.manage(summonedManageDto);
         if(i > 0){
