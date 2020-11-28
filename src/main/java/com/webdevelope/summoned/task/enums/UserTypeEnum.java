@@ -1,9 +1,12 @@
 package com.webdevelope.summoned.task.enums;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author LingChen @HumveeA6
  * Created on 2020-11-28
  */
+@Slf4j
 public enum UserTypeEnum {
 
     ADMIN(0),
@@ -13,6 +16,7 @@ public enum UserTypeEnum {
     private int type;
 
     public static boolean isAdmin(int type){
+        log.info("UserTypeEnum type: "+type);
         return type == ADMIN.getType();
     }
 

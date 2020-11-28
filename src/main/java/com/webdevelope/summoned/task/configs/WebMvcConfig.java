@@ -2,6 +2,8 @@ package com.webdevelope.summoned.task.configs;
 
 import java.util.List;
 
+import com.webdevelope.summoned.task.annotations.AdminPermissionRequired;
+import com.webdevelope.summoned.task.interceptors.AdminPerimissionRequiredInteceptor;
 import com.webdevelope.summoned.task.interceptors.SeniorPerimissionRequiredInteceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,9 +22,15 @@ import com.zaxxer.hikari.HikariDataSource;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
+    @Bean
+    public AdminPerimissionRequiredInteceptor adminPerimissionRequiredInteceptor(){
+        return new AdminPerimissionRequiredInteceptor();
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new SeniorPerimissionRequiredInteceptor()).addPathPatterns("/**");
+        registry.addInterceptor(adminPerimissionRequiredInteceptor()).addPathPatterns("/**");
     }
 
 //    /**

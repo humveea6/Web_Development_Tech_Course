@@ -35,6 +35,12 @@ public class ExceptionHandlers {
         return WebResultUtil.buildResult(ResponseVo.permissionDenied("您还未登录！"), HttpStatus.FORBIDDEN);
     }
 
+    @ResponseBody
+    @ExceptionHandler(AdminPermissionRequiredException.class)
+    public ResponseEntity<String> adminPermissionRequiredHandler(){
+        return WebResultUtil.buildResult(ResponseVo.permissionDenied("您需要管理员权限来执行此操作！"), HttpStatus.FORBIDDEN);
+    }
+
     @ExceptionHandler(Throwable.class)
     public ResponseEntity<String> handleThrowable(HttpServletRequest request, Throwable e) {
         printStackTrace(request, e);
