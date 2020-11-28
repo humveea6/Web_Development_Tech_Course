@@ -88,4 +88,12 @@ public class UserInfoServiceImpl implements UserInfoService {
         }
         return userIdInfoMapper.updateByPrimaryKeySelective(userIdInfo);
     }
+
+    @Override
+    public boolean exist(String userName) {
+        UserIdInfoExample example = new UserIdInfoExample();
+        UserIdInfoExample.Criteria criteria = example.createCriteria();
+        criteria.andUserNameEqualTo(userName);
+        return userIdInfoMapper.countByExample(example) != 0;
+    }
 }

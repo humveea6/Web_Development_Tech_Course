@@ -1,6 +1,7 @@
 package com.webdevelope.summoned.task.controller;
 
 import com.webdevelope.summoned.task.annotations.SeniorPermissionRequired;
+import com.webdevelope.summoned.task.enums.UserTypeEnum;
 import com.webdevelope.summoned.task.form.UserInfoModifyForm;
 import com.webdevelope.summoned.task.form.UserLoginform;
 import com.webdevelope.summoned.task.form.UserRegisterform;
@@ -56,6 +57,17 @@ public class UserController {
         return WebResultUtil.buildResult(ResponseVo.success(register),HttpStatus.OK);
     }
 
+    @GetMapping("/exist")
+    public ResponseEntity<String> userNameExist(String userName){
+        boolean exist = userInfoService.exist(userName);
+        if(exist){
+            return WebResultUtil.buildResult(ResponseVo.success("exist"),HttpStatus.OK);
+        }
+        else{
+            return WebResultUtil.buildResult(ResponseVo.success("Not exist"),HttpStatus.OK);
+        }
+    }
+
     @PostMapping("/login")
     public ResponseEntity<String> login(@Valid @RequestBody UserLoginform userLoginform,
                                         BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response){
@@ -66,6 +78,8 @@ public class UserController {
 
         ResponseVo<UserIdInfo> userResponseVo =
                 userInfoService.login(userLoginform.getUsername(), userLoginform.getPassword());
+
+        log.info("login service response: "+JsonUtils.toJson(userResponseVo));
 
         UserIdInfo user = userResponseVo.getData();
 
@@ -85,8 +99,16 @@ public class UserController {
                     false
             );
         }
+        else{
+            return WebResultUtil.buildResult(ResponseVo.USER_NOT_EXIST_OR_PASSWORD_ERROR(),HttpStatus.OK);
+        }
 
-        return WebResultUtil.buildResult(ResponseVo.success(),HttpStatus.OK);
+        if(user.getUserType() != null && UserTypeEnum.isAdmin(user.getUserType())){
+            return WebResultUtil.buildResult(ResponseVo.success("admin"),HttpStatus.OK);
+        }
+        else{
+            return WebResultUtil.buildResult(ResponseVo.success("user"),HttpStatus.OK);
+        }
     }
 
     @SeniorPermissionRequired

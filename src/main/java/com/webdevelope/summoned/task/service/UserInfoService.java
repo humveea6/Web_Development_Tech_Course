@@ -25,4 +25,6 @@ public interface UserInfoService {
      * @return
      */
     int modify(long id,String password,String phone);
+
+    boolean exist(String userName);
 }
