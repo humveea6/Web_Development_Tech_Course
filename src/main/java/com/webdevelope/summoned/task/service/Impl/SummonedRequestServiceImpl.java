@@ -15,7 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.webdevelope.summoned.task.enums.SummonedStatusEnum.DELETE;
 import static com.webdevelope.summoned.task.enums.SummonedStatusEnum.WAIT_FOR_RESPONSE;
@@ -110,5 +113,27 @@ public class SummonedRequestServiceImpl implements SummonedRequestService {
             summonedDetailVo.setRequestInfoList(summonedRequestInfoList);
         }
         return summonedDetailVo;
+    }
+
+    @Override
+    public List<SummonedRequestInfo> getRequestList(Long userId) {
+        SummonedRequestInfoExample example = new SummonedRequestInfoExample();
+        SummonedRequestInfoExample.Criteria criteria = example.createCriteria();
+        criteria.andRequestUserIdEqualTo(userId);
+        return summonedRequestInfoMapper.selectByExample(example);
+    }
+
+    @Override
+    public List<SummonedInfo> getSummonedList(long userId) {
+        SummonedRequestInfoExample example = new SummonedRequestInfoExample();
+        SummonedRequestInfoExample.Criteria criteria = example.createCriteria();
+        criteria.andRequestUserIdEqualTo(userId);
+        List<SummonedRequestInfo> summonedRequestInfos = summonedRequestInfoMapper.selectByExample(example);
+        Set<Long> ids = summonedRequestInfos.stream().map(SummonedRequestInfo::getSummonedId).collect(Collectors.toSet());
+
+        SummonedInfoExample summonedInfoExample = new SummonedInfoExample();
+        SummonedInfoExample.Criteria criteria1 = summonedInfoExample.createCriteria();
+        criteria1.andIdIn(new ArrayList<>(ids));
+        return summonedInfoMapper.selectByExample(summonedInfoExample);
     }
 }

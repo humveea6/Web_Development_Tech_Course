@@ -100,6 +100,9 @@ public class SummonedResponseServiceImpl implements SummonedResponseService {
             int insert = summonedResponseInfoMapper.insertSelective(summonedResponseInfo);
             return 1;
         }
+        else if(i > 0 &&summonedManageDto.getOption().equals(2)){
+            return 1;
+        }
         return -1;
     }
 }
