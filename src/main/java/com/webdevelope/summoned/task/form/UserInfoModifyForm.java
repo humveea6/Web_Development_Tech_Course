@@ -12,6 +12,8 @@ public class UserInfoModifyForm {
 
     private String password;
 
+    private String desc;
+
     public Long getId() {
         return id;
     }
@@ -34,5 +36,13 @@ public class UserInfoModifyForm {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 }

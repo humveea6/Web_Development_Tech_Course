@@ -33,6 +33,9 @@ public class RequestController {
 
     @GetMapping("/list")
     ResponseEntity<String> getSummonedList(Long userId, Integer type, String search, PageDto pageDto){
+        if(pageDto == null || pageDto.getPageSize() == null ||pageDto.getPageNum() ==null){
+            return WebResultUtil.buildResult(ResponseVo.PARAM_ERROR("Page Params is null!"),HttpStatus.OK);
+        }
         return WebResultUtil.buildResult(ResponseVo.success(
                 summonedRequestService.getSummonedList(userId,type,search,pageDto)),HttpStatus.OK);
     }

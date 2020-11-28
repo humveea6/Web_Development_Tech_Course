@@ -1,6 +1,7 @@
 package com.webdevelope.summoned.task.controller;
 
 import com.webdevelope.summoned.task.annotations.SeniorPermissionRequired;
+import com.webdevelope.summoned.task.enums.UserTypeEnum;
 import com.webdevelope.summoned.task.form.UserInfoModifyForm;
 import com.webdevelope.summoned.task.form.UserLoginform;
 import com.webdevelope.summoned.task.form.UserRegisterform;
@@ -11,6 +12,7 @@ import com.webdevelope.summoned.task.utils.CookieUtils;
 import com.webdevelope.summoned.task.utils.JsonUtils;
 import com.webdevelope.summoned.task.utils.WebResultUtil;
 import com.webdevelope.summoned.task.vo.ResponseVo;
+import com.webdevelope.summoned.task.vo.UserInfoVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author LingChen
@@ -56,6 +60,17 @@ public class UserController {
         return WebResultUtil.buildResult(ResponseVo.success(register),HttpStatus.OK);
     }
 
+    @GetMapping("/exist")
+    public ResponseEntity<String> userNameExist(String userName){
+        boolean exist = userInfoService.exist(userName);
+        if(exist){
+            return WebResultUtil.buildResult(ResponseVo.success("exist"),HttpStatus.OK);
+        }
+        else{
+            return WebResultUtil.buildResult(ResponseVo.success("Not exist"),HttpStatus.OK);
+        }
+    }
+
     @PostMapping("/login")
     public ResponseEntity<String> login(@Valid @RequestBody UserLoginform userLoginform,
                                         BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response){
@@ -66,6 +81,8 @@ public class UserController {
 
         ResponseVo<UserIdInfo> userResponseVo =
                 userInfoService.login(userLoginform.getUsername(), userLoginform.getPassword());
+
+        log.info("login service response: "+JsonUtils.toJson(userResponseVo));
 
         UserIdInfo user = userResponseVo.getData();
 
@@ -85,19 +102,47 @@ public class UserController {
                     false
             );
         }
+        else{
+            return WebResultUtil.buildResult(ResponseVo.USER_NOT_EXIST_OR_PASSWORD_ERROR(),HttpStatus.OK);
+        }
 
-        return WebResultUtil.buildResult(ResponseVo.success(),HttpStatus.OK);
+        Map<String,Object> resMap = new HashMap<>();
+        UserInfoVo info = userInfoService.getInfo(user.getId());
+        resMap.put("user",info);
+
+        if(user.getUserType() != null && UserTypeEnum.isAdmin(user.getUserType())){
+            resMap.put("userType","admin");
+        }
+        else{
+            resMap.put("userType","user");
+        }
+
+        return WebResultUtil.buildResult(ResponseVo.success(resMap),HttpStatus.OK);
+    }
+
+    @GetMapping("/info")
+    @SeniorPermissionRequired
+    public ResponseEntity<String> info(Long userId){
+        if(userId == null){
+            return WebResultUtil.buildResult(ResponseVo.fail("userId is null!"),HttpStatus.OK);
+        }
+        UserInfoVo info = userInfoService.getInfo(userId);
+        if(info == null){
+            return WebResultUtil.buildResult(ResponseVo.fail("user not exist!"),HttpStatus.OK);
+        }
+        return WebResultUtil.buildResult(ResponseVo.success(info),HttpStatus.OK);
     }
 
     @SeniorPermissionRequired
     @PostMapping("/modify")
-    public ResponseEntity<String> modifyInfo(@Valid @RequestBody UserInfoModifyForm userInfoModifyForm){
-        int modify = userInfoService.modify(userInfoModifyForm.getId(), userInfoModifyForm.getPassword(), userInfoModifyForm.getCellphoneNumber());
+    public ResponseEntity<String> modifyInfo(@Valid @RequestBody UserInfoModifyForm userInfoModifyForm,HttpServletRequest request){
+        int modify = userInfoService.modify(userInfoModifyForm.getId(),
+                userInfoModifyForm.getPassword(), userInfoModifyForm.getCellphoneNumber(),userInfoModifyForm.getDesc(),request);
         if(modify > 0){
             return WebResultUtil.buildResult(ResponseVo.success(),HttpStatus.OK);
         }
         else{
-            return WebResultUtil.buildResult(ResponseVo.fail(),HttpStatus.OK);
+            return WebResultUtil.buildResult(ResponseVo.permissionDenied("非法请求！"),HttpStatus.OK);
         }
     }
 

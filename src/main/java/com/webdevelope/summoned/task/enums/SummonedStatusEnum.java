@@ -6,7 +6,7 @@ package com.webdevelope.summoned.task.enums;
  */
 public enum SummonedStatusEnum {
     DONE(1),
-    WAIT_FOR_RESPONSE(2),
+    WAIT_FOR_RESPONSE(0),
     RESPONSE_NOT_ENOUGH(3),
     CANCEL(4),
     TIME_OUT(5),
