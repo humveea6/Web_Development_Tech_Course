@@ -1,12 +1,16 @@
 package com.webdevelope.summoned.task.service.Impl;
 
+import com.webdevelope.summoned.task.enums.UserGradeEnum;
+import com.webdevelope.summoned.task.enums.UserTypeEnum;
 import com.webdevelope.summoned.task.mappers.UserIdInfoMapper;
 import com.webdevelope.summoned.task.model.UserIdInfo;
 import com.webdevelope.summoned.task.model.UserIdInfoExample;
 import com.webdevelope.summoned.task.service.UserInfoService;
 import com.webdevelope.summoned.task.utils.JsonUtils;
 import com.webdevelope.summoned.task.vo.ResponseVo;
+import com.webdevelope.summoned.task.vo.UserInfoVo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -75,11 +79,14 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public int modify(long id, String password, String phone) {
+    public int modify(long id, String password, String phone,String desc) {
         UserIdInfo userIdInfo = new UserIdInfo();
         userIdInfo.setId(id);
         if(!StringUtils.isEmpty(phone)) {
             userIdInfo.setCellphoneNumber(phone);
+        }
+        if(!StringUtils.isEmpty(desc)) {
+            userIdInfo.setUserDesc(desc);
         }
         if(!StringUtils.isEmpty(password)){
             //MD5 摘要
@@ -95,5 +102,19 @@ public class UserInfoServiceImpl implements UserInfoService {
         UserIdInfoExample.Criteria criteria = example.createCriteria();
         criteria.andUserNameEqualTo(userName);
         return userIdInfoMapper.countByExample(example) != 0;
+    }
+
+    @Override
+    public UserInfoVo getInfo(long userId) {
+        UserIdInfo userIdInfo = userIdInfoMapper.selectByPrimaryKey(userId);
+        UserInfoVo userInfoVo = new UserInfoVo();
+        if(userIdInfo == null){
+            return null;
+        }
+        BeanUtils.copyProperties(userIdInfo,userInfoVo);
+        userInfoVo.setUserType(UserTypeEnum.userType(userIdInfo.getUserType()));
+        userInfoVo.setUserGrade(UserGradeEnum.userGrade(userIdInfo.getUserGrade()));
+
+        return userInfoVo;
     }
 }

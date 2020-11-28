@@ -12,6 +12,7 @@ import com.webdevelope.summoned.task.utils.CookieUtils;
 import com.webdevelope.summoned.task.utils.JsonUtils;
 import com.webdevelope.summoned.task.utils.WebResultUtil;
 import com.webdevelope.summoned.task.vo.ResponseVo;
+import com.webdevelope.summoned.task.vo.UserInfoVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,10 +112,24 @@ public class UserController {
         }
     }
 
+    @GetMapping("/info")
+    @SeniorPermissionRequired
+    public ResponseEntity<String> info(Long userId){
+        if(userId == null){
+            return WebResultUtil.buildResult(ResponseVo.fail("userId is null!"),HttpStatus.OK);
+        }
+        UserInfoVo info = userInfoService.getInfo(userId);
+        if(info == null){
+            return WebResultUtil.buildResult(ResponseVo.fail("user not exist!"),HttpStatus.OK);
+        }
+        return WebResultUtil.buildResult(ResponseVo.success(info),HttpStatus.OK);
+    }
+
     @SeniorPermissionRequired
     @PostMapping("/modify")
     public ResponseEntity<String> modifyInfo(@Valid @RequestBody UserInfoModifyForm userInfoModifyForm){
-        int modify = userInfoService.modify(userInfoModifyForm.getId(), userInfoModifyForm.getPassword(), userInfoModifyForm.getCellphoneNumber());
+        int modify = userInfoService.modify(userInfoModifyForm.getId(),
+                userInfoModifyForm.getPassword(), userInfoModifyForm.getCellphoneNumber(),userInfoModifyForm.getDesc());
         if(modify > 0){
             return WebResultUtil.buildResult(ResponseVo.success(),HttpStatus.OK);
         }

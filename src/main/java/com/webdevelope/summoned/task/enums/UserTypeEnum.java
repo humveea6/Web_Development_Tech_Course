@@ -16,6 +16,10 @@ public enum UserTypeEnum {
         return type == ADMIN.getType();
     }
 
+    public static String userType(int type){
+        return type == ADMIN.getType() ? "管理员":"普通用户";
+    }
+
     UserTypeEnum(int type) {
         this.type = type;
     }

@@ -2,6 +2,7 @@ package com.webdevelope.summoned.task.service;
 
 import com.webdevelope.summoned.task.model.UserIdInfo;
 import com.webdevelope.summoned.task.vo.ResponseVo;
+import com.webdevelope.summoned.task.vo.UserInfoVo;
 
 /**
  * @author LingChen
@@ -24,7 +25,9 @@ public interface UserInfoService {
      * @param phone
      * @return
      */
-    int modify(long id,String password,String phone);
+    int modify(long id,String password,String phone,String desc);
 
     boolean exist(String userName);
+
+    UserInfoVo getInfo(long userId);
 }
