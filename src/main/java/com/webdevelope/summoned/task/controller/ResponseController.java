@@ -32,7 +32,7 @@ public class ResponseController {
             return WebResultUtil.buildResult(ResponseVo.success(), HttpStatus.OK);
         }
         else{
-            return WebResultUtil.buildResult(ResponseVo.fail(),HttpStatus.OK);
+            return WebResultUtil.buildResult(ResponseVo.fail("修改失败"),HttpStatus.OK);
         }
     }
 

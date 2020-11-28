@@ -25,6 +25,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author LingChen
@@ -104,12 +106,18 @@ public class UserController {
             return WebResultUtil.buildResult(ResponseVo.USER_NOT_EXIST_OR_PASSWORD_ERROR(),HttpStatus.OK);
         }
 
+        Map<String,Object> resMap = new HashMap<>();
+        UserInfoVo info = userInfoService.getInfo(user.getId());
+        resMap.put("user",info);
+
         if(user.getUserType() != null && UserTypeEnum.isAdmin(user.getUserType())){
-            return WebResultUtil.buildResult(ResponseVo.success("admin"),HttpStatus.OK);
+            resMap.put("userType","admin");
         }
         else{
-            return WebResultUtil.buildResult(ResponseVo.success("user"),HttpStatus.OK);
+            resMap.put("userType","user");
         }
+
+        return WebResultUtil.buildResult(ResponseVo.success(resMap),HttpStatus.OK);
     }
 
     @GetMapping("/info")
@@ -127,14 +135,14 @@ public class UserController {
 
     @SeniorPermissionRequired
     @PostMapping("/modify")
-    public ResponseEntity<String> modifyInfo(@Valid @RequestBody UserInfoModifyForm userInfoModifyForm){
+    public ResponseEntity<String> modifyInfo(@Valid @RequestBody UserInfoModifyForm userInfoModifyForm,HttpServletRequest request){
         int modify = userInfoService.modify(userInfoModifyForm.getId(),
-                userInfoModifyForm.getPassword(), userInfoModifyForm.getCellphoneNumber(),userInfoModifyForm.getDesc());
+                userInfoModifyForm.getPassword(), userInfoModifyForm.getCellphoneNumber(),userInfoModifyForm.getDesc(),request);
         if(modify > 0){
             return WebResultUtil.buildResult(ResponseVo.success(),HttpStatus.OK);
         }
         else{
-            return WebResultUtil.buildResult(ResponseVo.fail(),HttpStatus.OK);
+            return WebResultUtil.buildResult(ResponseVo.permissionDenied("非法请求！"),HttpStatus.OK);
         }
     }
 
