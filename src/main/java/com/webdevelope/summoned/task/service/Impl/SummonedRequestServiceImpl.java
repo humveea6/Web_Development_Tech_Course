@@ -136,4 +136,14 @@ public class SummonedRequestServiceImpl implements SummonedRequestService {
         criteria1.andIdIn(new ArrayList<>(ids));
         return summonedInfoMapper.selectByExample(summonedInfoExample);
     }
+
+    @Override
+    public List<SummonedInfo> getAllsummoned() {
+        return summonedInfoMapper.selectByExample(new SummonedInfoExample());
+    }
+
+    @Override
+    public List<SummonedRequestInfo> getAllRequestList() {
+        return summonedRequestInfoMapper.selectByExample(new SummonedRequestInfoExample());
+    }
 }

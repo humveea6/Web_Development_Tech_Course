@@ -4,9 +4,12 @@ import com.webdevelope.summoned.task.annotations.SeniorPermissionRequired;
 import com.webdevelope.summoned.task.dto.PageDto;
 import com.webdevelope.summoned.task.enums.SummonedTypeEnum;
 import com.webdevelope.summoned.task.form.SummonedRequestForm;
+import com.webdevelope.summoned.task.model.SummonedInfo;
+import com.webdevelope.summoned.task.model.SummonedRequestInfo;
 import com.webdevelope.summoned.task.service.SummonedRequestService;
 import com.webdevelope.summoned.task.utils.WebResultUtil;
 import com.webdevelope.summoned.task.vo.ResponseVo;
+import com.webdevelope.summoned.task.vo.SummonedDetailVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,8 +17,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -41,9 +47,17 @@ public class RequestController {
     }
 
     @GetMapping("/detail")
-    ResponseEntity<String> getDetail(Long userId,Long summonedId){
-        return WebResultUtil.buildResult(ResponseVo.success(
-                summonedRequestService.getSummonedDetail(userId,summonedId)),HttpStatus.OK);
+    ResponseEntity<String> getDetail(HttpServletResponse response,Long userId,Long summonedId){
+        SummonedDetailVo summonedDetailVo = summonedRequestService.getSummonedDetail(userId, summonedId);
+
+        return WebResultUtil.buildResult(ResponseVo.success(summonedDetailVo),HttpStatus.OK);
+    }
+
+    @GetMapping("/picture")
+    ResponseEntity<String> getPicture(HttpServletResponse response,String path){
+        getFile(response,path);
+
+        return WebResultUtil.buildResult(ResponseVo.success(),HttpStatus.OK);
     }
 
     @PostMapping("/add")
@@ -64,7 +78,8 @@ public class RequestController {
             return WebResultUtil.buildResult(ResponseVo.PARAM_ERROR("文件为空！"),HttpStatus.OK);
         }
         String fileName = file.getOriginalFilename();
-        String path = "/Users/humveea6/IdeaProjects/WebDevelopmentTechProject/src/main/resources/static/UploadFiles/";
+//        String path = "/Users/humveea6/IdeaProjects/WebDevelopmentTechProject/src/main/resources/static/UploadFiles/";
+        String path = "/Users/jinnanhao/Desktop/shit";
         File dest = new File(path + fileName);
         try {
             file.transferTo(dest);
@@ -125,5 +140,29 @@ public class RequestController {
             list.add(map);
         }
         return list;
+    }
+
+    public void getFile(HttpServletResponse response, String path){
+        FileInputStream fis = null;
+        response.setContentType("image/png");
+        try {
+            OutputStream out = response.getOutputStream();
+            File file = new File(path);
+            fis = new FileInputStream(file);
+            byte[] b = new byte[fis.available()];
+            fis.read(b);
+            out.write(b);
+            out.flush();
+        } catch (Exception e) {
+            log.error("getFile stream error: "+e);
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    log.error("getFile error: "+e);
+                }
+            }
+        }
     }
 }

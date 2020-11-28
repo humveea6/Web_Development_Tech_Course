@@ -5,14 +5,17 @@ import com.webdevelope.summoned.task.dto.SummonedResponseDto;
 import com.webdevelope.summoned.task.mappers.SummonedInfoMapper;
 import com.webdevelope.summoned.task.mappers.SummonedRequestInfoMapper;
 import com.webdevelope.summoned.task.mappers.SummonedResponseInfoMapper;
-import com.webdevelope.summoned.task.model.SummonedInfo;
-import com.webdevelope.summoned.task.model.SummonedRequestInfo;
-import com.webdevelope.summoned.task.model.SummonedRequestInfoExample;
-import com.webdevelope.summoned.task.model.SummonedResponseInfo;
+import com.webdevelope.summoned.task.model.*;
 import com.webdevelope.summoned.task.service.SummonedResponseService;
+import com.webdevelope.summoned.task.vo.AnalyzeVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.webdevelope.summoned.task.enums.SummonedRequestStatusEnum.*;
 import static com.webdevelope.summoned.task.enums.SummonedRequestStatusEnum.CANCEL;
@@ -104,5 +107,28 @@ public class SummonedResponseServiceImpl implements SummonedResponseService {
             return 1;
         }
         return -1;
+    }
+
+    @Override
+    public Map<String, AnalyzeVo> analyze() {
+        List<SummonedResponseInfo> infoList = summonedResponseInfoMapper.selectByExample(new SummonedResponseInfoExample());
+        Map<String, AnalyzeVo> resMap = new HashMap<>();
+        SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
+        SimpleDateFormat formatMonth = new SimpleDateFormat("MM");
+
+        infoList.forEach(s -> {
+            String date = formatYear.format(s.getCreateTime())+"-"+formatMonth.format(s.getCreateTime());
+            if(resMap.containsKey(date)){
+                AnalyzeVo analyzeVo = resMap.get(date);
+                analyzeVo.setCount(analyzeVo.getCount()+1);
+                analyzeVo.setTotal(analyzeVo.getTotal()+s.getOwnerPay()+s.getResponsePay());
+            }
+            else{
+                AnalyzeVo analyzeVo = new AnalyzeVo(1,s.getOwnerPay()+s.getResponsePay());
+                resMap.put(date,analyzeVo);
+            }
+        });
+
+        return resMap;
     }
 }
