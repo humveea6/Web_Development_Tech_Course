@@ -52,7 +52,10 @@ public class AdminPerimissionRequiredInteceptor implements HandlerInterceptor {
                     logger.info("AdminPerimissionRequiredInteceptor request record,url:{},method:{},user:{}",
                             request.getRequestURL()+"?"+request.getQueryString(),request.getMethod(), JsonUtils.toJson(loginToken));
 
-                    return userInfoService.isAdmin(loginToken.getUserId());
+                    if(userInfoService.isAdmin(loginToken.getUserId())){
+                        return true;
+                    }
+                    throw new AdminPermissionRequiredException();
                 } catch (Exception e) {
                     logger.error("AdminPerimissionRequiredInteceptor cookie解析失败，默认未登录"+e);
                     throw new AdminPermissionRequiredException();

@@ -78,8 +78,8 @@ public class RequestController {
             return WebResultUtil.buildResult(ResponseVo.PARAM_ERROR("文件为空！"),HttpStatus.OK);
         }
         String fileName = file.getOriginalFilename();
-//        String path = "/Users/humveea6/IdeaProjects/WebDevelopmentTechProject/src/main/resources/static/UploadFiles/";
-        String path = "/Users/jinnanhao/Desktop/shit";
+        String path = "/Users/humveea6/IdeaProjects/WebDevelopmentTechProject/src/main/resources/static/UploadFiles/";
+//        String path = "/Users/jinnanhao/Desktop/shit/";
         File dest = new File(path + fileName);
         try {
             file.transferTo(dest);
