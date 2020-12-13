@@ -77,8 +77,6 @@ public class SummonedRequestServiceImpl implements SummonedRequestService {
     @Override
     public BaseResultVo getSummonedList(Long userId, Integer type, String search, PageDto pageDto) {
         SummonedInfoPageExample example = new SummonedInfoPageExample();
-        example.setPageNum(Math.max(pageDto.getPageNum()-1,0));
-        example.setPageSize(pageDto.getPageSize());
         SummonedInfoExample.Criteria criteria = example.createCriteria();
         if(userId != null){
             criteria.andOwnUserIdEqualTo(userId);
@@ -89,11 +87,15 @@ public class SummonedRequestServiceImpl implements SummonedRequestService {
         if(!StringUtils.isEmpty(search)){
             criteria.andSummonedNameLike("%"+search+"%");
         }
-        List<SummonedInfo> summonedInfoList = summonedInfoMapper.selectByPageExample(example);
         long count = summonedInfoMapper.countByExample(example);
+        example.setPageNum(Math.max(pageDto.getPageNum()-1,0) * pageDto.getPageSize());
+        example.setPageSize(pageDto.getPageSize());
+        example.setOrderByClause("id asc");
+        List<SummonedInfo> summonedInfoList = summonedInfoMapper.selectByPageExample(example);
+
         BaseResultVo resultVo = new BaseResultVo(summonedInfoList);
         resultVo.setPageNum(pageDto.getPageNum());
-        resultVo.setTotal((int)(count-1)/pageDto.getPageSize()+1);
+        resultVo.setTotal((int)count);
         return resultVo;
     }
 
@@ -135,5 +137,15 @@ public class SummonedRequestServiceImpl implements SummonedRequestService {
         SummonedInfoExample.Criteria criteria1 = summonedInfoExample.createCriteria();
         criteria1.andIdIn(new ArrayList<>(ids));
         return summonedInfoMapper.selectByExample(summonedInfoExample);
+    }
+
+    @Override
+    public List<SummonedInfo> getAllsummoned() {
+        return summonedInfoMapper.selectByExample(new SummonedInfoExample());
+    }
+
+    @Override
+    public List<SummonedRequestInfo> getAllRequestList() {
+        return summonedRequestInfoMapper.selectByExample(new SummonedRequestInfoExample());
     }
 }

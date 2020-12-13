@@ -147,4 +147,26 @@ public class UserInfoServiceImpl implements UserInfoService {
 
         return userInfoVo;
     }
+
+    @Override
+    public boolean isAdmin(Long userId) {
+        log.info("233");
+        try {
+            UserIdInfo userIdInfo = userIdInfoMapper.selectByPrimaryKey(userId);
+            log.info("isadmin " + JsonUtils.toJson(userIdInfo));
+            if (userIdInfo == null) {
+                return false;
+            }
+            return UserTypeEnum.isAdmin(userIdInfo.getUserType());
+        }
+        catch (Exception e){
+            log.info("isAdmin error: "+e);
+        }
+        return false;
+    }
+
+    @Override
+    public List<UserIdInfo> getUserList() {
+        return userIdInfoMapper.selectByExample(new UserIdInfoExample());
+    }
 }

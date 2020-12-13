@@ -5,6 +5,7 @@ import com.webdevelope.summoned.task.vo.ResponseVo;
 import com.webdevelope.summoned.task.vo.UserInfoVo;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author LingChen
@@ -32,4 +33,8 @@ public interface UserInfoService {
     boolean exist(String userName);
 
     UserInfoVo getInfo(long userId);
+
+    boolean isAdmin(Long userId);
+
+    List<UserIdInfo> getUserList();
 }

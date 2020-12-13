@@ -24,4 +24,8 @@ public interface SummonedRequestService {
     public List<SummonedRequestInfo> getRequestList(Long userId);
 
     public List<SummonedInfo> getSummonedList(long userId);
+
+    public List<SummonedInfo> getAllsummoned();
+
+    public List<SummonedRequestInfo> getAllRequestList();
 }
