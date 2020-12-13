@@ -88,8 +88,9 @@ public class SummonedRequestServiceImpl implements SummonedRequestService {
             criteria.andSummonedNameLike("%"+search+"%");
         }
         long count = summonedInfoMapper.countByExample(example);
-        example.setPageNum(Math.max(pageDto.getPageNum()-1,0));
+        example.setPageNum(Math.max(pageDto.getPageNum()-1,0) * pageDto.getPageSize());
         example.setPageSize(pageDto.getPageSize());
+        example.setOrderByClause("id asc");
         List<SummonedInfo> summonedInfoList = summonedInfoMapper.selectByPageExample(example);
 
         BaseResultVo resultVo = new BaseResultVo(summonedInfoList);
